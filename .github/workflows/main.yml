@@ -1,4 +1,4 @@
-name: Node.js CI/CD
+name: chat app ci-cd
 
 # Push - action will trigger if someone pushes to the main branch
 # Pull request - action will trigger if someone opens a pull request from the main branch.
@@ -55,5 +55,5 @@ jobs:
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ secrets.CI_CD_SECRET }}
+          github_token: ${{ secrets.CHAT_API }}
           publish_dir: ./dist
