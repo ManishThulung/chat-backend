@@ -5,7 +5,7 @@
     "sourceMap": true,
     "target": "es6",
     "module": "commonjs",
-    "outDir": "./build",
+    "outDir": "./dist",
     "noImplicitAny": false,
     "resolveJsonModule": true,
     "esModuleInterop": true
