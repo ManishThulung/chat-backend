@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import House from "../models/houseModel";
-import Room from "../models/roomModel";
+import House from "../models/chat-model";
+import Room from "../models/message-model";
 import ErrorHandler from "../utils/ErrorHandler";
 
 // create
