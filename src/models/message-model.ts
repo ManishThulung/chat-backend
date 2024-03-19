@@ -11,7 +11,7 @@ const MessageSchema = new mongoose.Schema(
       required: true,
     },
     attachments: { type: [{ url: String, localPath: String }], default: [] },
-    chat: { type: mongoose.Schema.Types.ObjectId, ref: "Chart" },
+    chat: { type: mongoose.Schema.Types.ObjectId, ref: "Chat" },
     deletedAt: {
       type: Date,
       default: null,

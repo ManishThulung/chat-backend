@@ -3,7 +3,15 @@ import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-export const UserSchema = new mongoose.Schema(
+interface UserDocument extends Document {
+  name: string;
+  email: string;
+  password: string;
+  isPasswordCorrect(password: string): Promise<boolean>;
+  generateAccessToken(): string;
+}
+
+export const UserSchema = new mongoose.Schema<UserDocument>(
   {
     name: {
       type: String,

@@ -1,15 +1,16 @@
 import express, { Request, Response, Application, NextFunction } from "express";
 import ErrorHandler from "./utils/ErrorHandler";
-import HouseRouter from "./routes/houseRoutes";
+import AuthRouter from "./routes/auth.routes";
+import UserRouter from "./routes/user.routes";
 
 const app: Application = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/api/house", HouseRouter);
+app.use("/api/auth", AuthRouter);
+app.use("/api/users", UserRouter);
 
-// with this the app does not crash but throws error in json file
 app.use(
   (err: ErrorHandler, req: Request, res: Response, next: NextFunction) => {
     const errorStatus = err.status || 500;
