@@ -35,3 +35,31 @@ export const getUserById = async (
     next(error);
   }
 };
+
+export const searchUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { keyword } = req.query;
+
+    const user = await User.find({
+      $and: [
+        {
+          $or: [
+            { name: { $regex: keyword, $options: "i" } },
+            { email: { $regex: keyword, $options: "i" } },
+          ],
+        },
+      ],
+    }).select("-password");
+
+    if (!user) {
+      throw new ErrorHandler(404, "Users not found!");
+    }
+    res.status(200).json({ data: user });
+  } catch (error) {
+    next(error);
+  }
+};
