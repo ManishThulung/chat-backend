@@ -26,7 +26,7 @@ export const getUserById = async (
 ) => {
   try {
     const { id } = req.params;
-    const user = await User.findById({ _id:id }).select("-password");
+    const user = await User.findById({ _id: id }).select("-password");
     if (!user) {
       throw new ErrorHandler(404, "Users not found!");
     }

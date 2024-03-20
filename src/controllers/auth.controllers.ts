@@ -9,11 +9,22 @@ export const registerUser = async (
 ) => {
   try {
     const { name, email, password } = req.body;
-    const user = await User.create({ name, email, password });
 
+    const userExists = await User.findOne({ email });
+    if (userExists) {
+      throw new ErrorHandler(402, "User already exist, Login instead!");
+    }
+
+    const user = await User.create({ name, email, password });
+    const accessToken = user.generateAccessToken();
     res
       .status(201)
-      .json({ success: true, message: "register successful", data: user });
+      .json({
+        success: true,
+        message: "register successful",
+        data: user,
+        accessToken,
+      });
   } catch (error) {
     next(error);
   }
@@ -26,7 +37,7 @@ export const loginUser = async (
 ) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).select("password");
 
     if (!user) {
       throw new ErrorHandler(404, "User not found!");
@@ -41,7 +52,12 @@ export const loginUser = async (
 
     res
       .status(200)
-      .json({ success: true, message: "login successful", accessToken });
+      .json({
+        success: true,
+        message: "login successful",
+        data: user,
+        accessToken,
+      });
   } catch (error) {
     next(error);
   }
