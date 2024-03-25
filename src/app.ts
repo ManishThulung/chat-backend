@@ -1,8 +1,9 @@
+import cors from "cors";
 import express, { Request, Response, Application, NextFunction } from "express";
 import ErrorHandler from "./utils/ErrorHandler";
 import AuthRouter from "./routes/auth.routes";
 import UserRouter from "./routes/user.routes";
-import cors from "cors";
+import ChatRouter from "./routes/chat.routes";
 
 const app: Application = express();
 
@@ -12,6 +13,7 @@ app.use(cors());
 
 app.use("/api/auth", AuthRouter);
 app.use("/api/users", UserRouter);
+app.use("/api/chats", ChatRouter);
 
 app.use(
   (err: ErrorHandler, req: Request, res: Response, next: NextFunction) => {

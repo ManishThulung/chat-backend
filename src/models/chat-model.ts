@@ -4,7 +4,7 @@ const chatSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: true,
+      default: null,
     },
     isGroupChat: {
       type: Boolean,
@@ -15,7 +15,11 @@ const chatSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
-    messages: [{ type: mongoose.Schema.Types.ObjectId, ref: "Message" }],
+    // messages: [{ type: mongoose.Schema.Types.ObjectId, ref: "Message" }],
+    deletedAt: {
+      type: Date,
+      default: null,
+    },
   },
   { timestamps: true }
 );
