@@ -27,7 +27,7 @@ const io = new Server(appServer, {
 });
 
 io.on("connection", (socket) => {
-  console.log(socket);
+  console.log(socket?.id, '1'); 
 });
 
 const server = appServer.listen(process.env.PORT, () => {
