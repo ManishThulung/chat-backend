@@ -27,8 +27,9 @@ const io = new Server(appServer, {
 });
 
 io.on("connection", (socket) => {
-  console.log(socket?.id, '1'); 
+  console.log(socket?.id, "1");
 });
+app.set("io", io);
 
 const server = appServer.listen(process.env.PORT, () => {
   console.log(`Server is working on http://localhost:${process.env.PORT}`);

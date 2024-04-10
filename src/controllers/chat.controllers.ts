@@ -3,6 +3,7 @@ import ErrorHandler from "../utils/ErrorHandler";
 import { User } from "../models/user-model";
 import { Chat } from "../models/chat-model";
 import { Message } from "../models/message-model";
+import { Socket } from "socket.io";
 
 export const getChats = async (
   req: Request,
@@ -75,11 +76,21 @@ export const createChat = async (
       throw new ErrorHandler(404, "chat not found!");
     }
 
-    await Message.create({
+    const newMessage = await Message.create({
       sender: req.user.id,
       content,
       chat: chat._id,
     });
+    const message = await Message.findById({_id: newMessage._id}).populate("sender");
+    const io = res.app.get("io");
+    // io.emit("message", 'hello')
+
+    // io.on("connection", (socket) => {
+    //   console.log(socket.id, "iddd")
+    //   console.log(message, "msg")
+    //   socket.emit("message", message);
+    // });
+    message && io.emit("sendMessage", message);
     res.status(200).json({ message: "ok" });
   } catch (error) {
     next(error);
