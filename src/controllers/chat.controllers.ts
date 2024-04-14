@@ -3,7 +3,6 @@ import ErrorHandler from "../utils/ErrorHandler";
 import { User } from "../models/user-model";
 import { Chat } from "../models/chat-model";
 import { Message } from "../models/message-model";
-import { Socket } from "socket.io";
 
 export const getChats = async (
   req: Request,
@@ -24,22 +23,27 @@ export const getChats = async (
   }
 };
 
-// export const getChatById = async (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) => {
-//   try {
-//     const { chatId } = req.query;
-//     const chat = await Chat.findById({ _id: chatId });
-//     if (!chat) {
-//       throw new ErrorHandler(404, "chats not found!");
-//     }
-//     res.status(200).json({ data: chat });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+export const chatExist = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { senderId, receiverId } = req.params;
+    console.log(senderId, receiverId);
+    const chat = await Chat.findOne({
+      participants: { $all: [senderId, receiverId] },
+    });
+
+    console.log(chat, "chat");
+    if (!chat) {
+      return res.status(200).json({ data: null });
+    }
+    res.status(200).json({ data: chat });
+  } catch (error) {
+    next(error);
+  }
+};
 
 export const createChat = async (
   req: any,
@@ -81,7 +85,9 @@ export const createChat = async (
       content,
       chat: chat._id,
     });
-    const message = await Message.findById({_id: newMessage._id}).populate("sender");
+    const message = await Message.findById({ _id: newMessage._id }).populate(
+      "sender"
+    );
     const io = res.app.get("io");
     // io.emit("message", 'hello')
 
