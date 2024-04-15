@@ -23,22 +23,27 @@ export const getChats = async (
   }
 };
 
-// export const getChatById = async (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) => {
-//   try {
-//     const { chatId } = req.query;
-//     const chat = await Chat.findById({ _id: chatId });
-//     if (!chat) {
-//       throw new ErrorHandler(404, "chats not found!");
-//     }
-//     res.status(200).json({ data: chat });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+export const chatExist = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { senderId, receiverId } = req.params;
+    console.log(senderId, receiverId);
+    const chat = await Chat.findOne({
+      participants: { $all: [senderId, receiverId] },
+    });
+
+    console.log(chat, "chat");
+    if (!chat) {
+      return res.status(200).json({ data: null });
+    }
+    res.status(200).json({ data: chat });
+  } catch (error) {
+    next(error);
+  }
+};
 
 export const createChat = async (
   req: any,
@@ -75,11 +80,23 @@ export const createChat = async (
       throw new ErrorHandler(404, "chat not found!");
     }
 
-    await Message.create({
+    const newMessage = await Message.create({
       sender: req.user.id,
       content,
       chat: chat._id,
     });
+    const message = await Message.findById({ _id: newMessage._id }).populate(
+      "sender"
+    );
+    const io = res.app.get("io");
+    // io.emit("message", 'hello')
+
+    // io.on("connection", (socket) => {
+    //   console.log(socket.id, "iddd")
+    //   console.log(message, "msg")
+    //   socket.emit("message", message);
+    // });
+    message && io.emit("sendMessage", message);
     res.status(200).json({ message: "ok" });
   } catch (error) {
     next(error);
